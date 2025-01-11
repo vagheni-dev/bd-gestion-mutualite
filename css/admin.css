@@ -1,0 +1,43 @@
+
+/* Tableau des projets */
+.table-container {
+    margin: 40px 0;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Responsivité */
+@media screen and (max-width: 768px) {
+    .skills li, .table-container table {
+        font-size: 0.9rem;
+    }
+
+    .profile {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 10px;
+    }
+}
