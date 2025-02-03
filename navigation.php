@@ -20,8 +20,8 @@
             <a href="index.html" class="logo">Gestion<span>  mutualite</span></a>
             <ul class="navlink">
               
-            <li><a href="index.html"><i class="fa-solid fa-house"></i>Acceuil</a></li>
-            <li><a href="service.html"><i class="fa-solid fa-paper-plane"></i>Membre</a></li>
+            <li><a href="index.php"><i class="fa-solid fa-house"></i>Acceuil</a></li>
+            <li><a href="admin.php"><i class="fa-solid fa-paper-plane"></i>gestion</a></li>
             <li><a href="chat.html"><i class="fa-solid fa-plane"></i> Activite </a></li>
             <li><a href="about.html"><i class="fa-solid fa-globe"></i>Apropos</a></li>
             <li><a href=""><i class="fa-solid fa-wifi"></i><button class="conn">se déconnecté</button></a></li>
