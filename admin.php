@@ -104,7 +104,41 @@ $totalPages = ceil($totalRows / $limit);
 
 
     <div class="container mt-5">
-        <h2 class="mb-4">Gestion des Membres</h2>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Ajouter un membre</h5>   
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-6 col-sm-12 col-xs-12 col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Liste des membres</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($result as $row) { ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($row['id']); ?></td>
+                            <td><?php echo htmlspecialchars($row['nom']); ?></td>
+                            <td><?php echo htmlspecialchars($row['email']); ?></td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <h2 class="mb-4">Gestion des Membres</h2>
         <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addMemberModal">
             Ajouter un Membre
         </button>
@@ -226,8 +260,9 @@ $totalPages = ceil($totalRows / $limit);
         }
     }
     ?>
+    </div>
 
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="max-height: 500px; overflow: hidden;">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -235,21 +270,21 @@ $totalPages = ceil($totalRows / $limit);
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="image1.jpg" class="d-block w-100" alt="...">
+                <img src="images/association.jpg" class="d-block w-100" alt="..." style="max-height: 500px; object-fit: cover;">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>First slide label</h5>
                     <p>Some representative placeholder content for the first slide.</p>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="image2.jpg" class="d-block w-100" alt="...">
+                <img src="images/Digital.jpg" class="d-block w-100" alt="..." style="max-height: 500px; object-fit: cover;">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Second slide label</h5>
                     <p>Some representative placeholder content for the second slide.</p>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="image3.jpg" class="d-block w-100" alt="...">
+                <img src="images/imgf.jpg" class="d-block w-100" alt="..." style="max-height: 500px; object-fit: cover;">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Third slide label</h5>
                     <p>Some representative placeholder content for the third slide.</p>
@@ -265,7 +300,15 @@ $totalPages = ceil($totalRows / $limit);
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1>Bienvenue dans l'application de gestion de mutualité</h1>
+                <p class="lead">Simplifiez la gestion de votre mutualité avec notre application intuitive et efficace. Gérez les membres, suivez les cotisations et accédez à des rapports détaillés en quelques clics.</p>
+                <p>Rejoignez-nous et découvrez comment notre solution peut transformer la gestion de votre mutualité, en vous offrant des outils puissants et une interface conviviale pour une expérience utilisateur optimale.</p>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="indexs.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
