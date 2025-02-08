@@ -34,14 +34,14 @@ $limit = 4; // Number of entries to show in a page
 $offset = ($page - 1) * $limit;
 
 // Prepare the SQL query with LIMIT and OFFSET
-$stmt = $pdo->prepare("SELECT * FROM `admin` LIMIT :limit OFFSET :offset");
+$stmt = $pdo->prepare("SELECT * FROM `user` LIMIT :limit OFFSET :offset");
 $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
 $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Get the total number of rows in the table
-$totalRowsQuery = $pdo->query("SELECT COUNT(*) FROM `admin`");
+$totalRowsQuery = $pdo->query("SELECT COUNT(*) FROM `user`");
 $totalRows = $totalRowsQuery->fetchColumn();
 $totalPages = ceil($totalRows / $limit);
 ?>
@@ -108,8 +108,22 @@ $totalPages = ceil($totalRows / $limit);
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">Ajouter un membre</h5>   
-            </div>
+                        <h5 class="card-title">Ajouter un membre</h5>
+                    </div>
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                            <i class="fas fa-user-plus"></i> Membres
+                        </button>
+                        <button type="button" class="btn btn-success mb-3">
+                            <i class="fas fa-tasks"></i> Activités
+                        </button>
+                        <button type="button" class="btn btn-warning mb-3">
+                            <i class="fas fa-landmark"></i> Patrimoine
+                        </button>
+                        <button type="button" class="btn btn-info mb-3">
+                            <i class="fas fa-cogs"></i> Paramètres
+                        </button>
+                    </div>
         </div>
     </div>
     <div class="col-lg-9 col-md-6 col-sm-12 col-xs-12 col-12">
@@ -118,7 +132,7 @@ $totalPages = ceil($totalRows / $limit);
                 <h5 class="card-title">Liste des membres</h5>
             </div>
             <div class="card-body">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-responsive-xl">
                     <thead class="table-dark">
                         <tr>
                     <th>matricule</th>
@@ -153,7 +167,7 @@ $totalPages = ceil($totalRows / $limit);
             Ajouter un Membre
         </button>
 
-        <table class="table table-bordered" id="tables">
+        <table class="table table-bordered table-responsive-xl" id="tables">
             <thead>
                 <tr>
                     <th>matricule</th>
@@ -164,7 +178,7 @@ $totalPages = ceil($totalRows / $limit);
                     <th>fonction</th>
                     <th>Adresse</th>
                     <th>mail</th>
-                    <th>actions</th>
+                    <th class="th-read">actions</th>
                 </tr>
             </thead>
             
@@ -215,7 +229,7 @@ $totalPages = ceil($totalRows / $limit);
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="adminpost.php" method="post">
+                    <form action="adminpost.php" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="membermatricule" class="form-label">Matricule</label>
                             <input name="matricule" type="text" class="form-control" id="membermatricule" placeholder="Matricule">
