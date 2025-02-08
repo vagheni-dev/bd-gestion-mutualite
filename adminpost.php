@@ -28,7 +28,7 @@ if (isset($_POST['envoie'])) {
     }
 
     // Vérifier la taille du fichier
-    if ($_FILES["photos"]["size"] > 500000) {
+    if ($_FILES["photos"]["size"] > 1000000) {
         echo "Désolé, votre fichier est trop volumineux.";
         $uploadOk = 0;
     }
@@ -52,7 +52,7 @@ if (isset($_POST['envoie'])) {
 
     if ($uploadOk == 1) {
         try {
-            $sql = "INSERT INTO `user` (`matricule`, `nom`, `postnom`, `fonction`, `email`, `adresse`, `contact`, `genre`, `photos`) VALUES (:matricule, :nom, :postnom, :fonction, :email, :adresse, :contact, :genre, :photos)";
+            $sql = "INSERT INTO `user` (`matricule`, `nom`, `postnom`, `fonction`, `mail`, `Adresse`, `contact`, `genre`, `photos`) VALUES (:matricule, :nom, :postnom, :fonction, :email, :adresse, :contact, :genre, :photos)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':matricule', $matricule, PDO::PARAM_STR);
             $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);

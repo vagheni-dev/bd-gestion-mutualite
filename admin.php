@@ -154,7 +154,7 @@ $totalPages = ceil($totalRows / $limit);
                     <td><?php echo htmlspecialchars($row['contact']); ?></td>
                     <td><?php echo htmlspecialchars($row['genre']); ?></td>
                     <td><?php echo htmlspecialchars($row['fonction']); ?></td>
-                    <td><?php echo htmlspecialchars($row['adresse']); ?></td>
+                    <td><?php echo htmlspecialchars($row['Adresse']); ?></td>
                     <td><?php echo htmlspecialchars($row['mail']); ?></td>
                         </tr>
                         <?php } ?>
@@ -192,11 +192,11 @@ $totalPages = ceil($totalRows / $limit);
                     <td><?php echo htmlspecialchars($row['contact']); ?></td>
                     <td><?php echo htmlspecialchars($row['genre']); ?></td>
                     <td><?php echo htmlspecialchars($row['fonction']); ?></td>
-                    <td><?php echo htmlspecialchars($row['adresse']); ?></td>
+                    <td><?php echo htmlspecialchars($row['Adresse']); ?></td>
                     <td><?php echo htmlspecialchars($row['mail']); ?></td>
                     <td>
-                        <button class="btn btn-info btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editMemberModal" data-id="<?php echo htmlspecialchars($row['id']); ?>" data-name="<?php echo htmlspecialchars($row['nom']); ?>" data-email="<?php echo htmlspecialchars($row['email']); ?>">Edit</button>
-                        <a href="supprimer.php?sup=<?php echo htmlspecialchars($row['id']); ?>"><button class="btn btn-danger btn-sm">Delete</button></a>
+                        <button class="btn btn-info btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editMemberModal" data-id="<?php echo htmlspecialchars($row['matricule']); ?>" data-name="<?php echo htmlspecialchars($row['nom']); ?>" data-email="<?php echo htmlspecialchars($row['mail']); ?>">Edit</button>
+                        <a href="supprimer.php?sup=<?php echo htmlspecialchars($row['matricule']); ?>"><button class="btn btn-danger btn-sm">Delete</button></a>
                     </td>
                 </tr>
                 <?php } ?>
@@ -348,9 +348,9 @@ $totalPages = ceil($totalRows / $limit);
         $genre = htmlspecialchars($_POST['genre']);
 
         try {
-            $sql = "UPDATE `admin` SET `matricule` = :matricule, `nom` = :name, `postnom` = :postnom, `fonction` = :fonction, `email` = :email, `adresse` = :adresse, `photos` = :photos, `contact` = :contact, `genre` = :genre WHERE `id` = :id";
+            $sql = "UPDATE `admin` SET `matricule` = :matricule, `nom` = :name, `postnom` = :postnom, `fonction` = :fonction, `email` = :email, `adresse` = :adresse, `photos` = :photos, `contact` = :contact, `genre` = :genre WHERE `matricule` = :matricule";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':matricule', $id, PDO::PARAM_INT);
             $stmt->bindParam(':matricule', $matricule, PDO::PARAM_STR);
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':postnom', $postnom, PDO::PARAM_STR);
