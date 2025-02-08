@@ -5,7 +5,7 @@ if (isset($_GET['sup'])) {
     $id = intval($_GET['sup']);
 
     // Préparer la requête de suppression
-    $sql = "DELETE FROM `admin` WHERE id = ?";
+    $sql = "DELETE FROM `user` WHERE matricule = ?";
     $stmt = $pdo->prepare($sql);
 
     // Exécuter la requête
