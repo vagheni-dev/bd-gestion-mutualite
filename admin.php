@@ -2,6 +2,11 @@
 session_start();
 require_once("connexion/connexion.php");
 
+// Vérifier si $pdo est défini
+if (!isset($pdo)) {
+    die("Erreur de connexion à la base de données.");
+}
+
 if (isset($_POST['update'])) {
     $id = htmlspecialchars($_POST['id']);
     $name = htmlspecialchars($_POST['nom']);
@@ -21,11 +26,6 @@ if (isset($_POST['update'])) {
         echo "Error: " . $e->getMessage();
         exit();
     }
-}
-
-// Vérifier si $pdo est défini
-if (!isset($pdo)) {
-    die("Erreur de connexion à la base de données.");
 }
 
 // Get the current page number from the query string, default to 1 if not set
@@ -121,17 +121,27 @@ $totalPages = ceil($totalRows / $limit);
                 <table class="table table-bordered">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
-                            <th>Nom</th>
-                            <th>Email</th>
+                    <th>matricule</th>
+                    <th>Nom</th>
+                    <th>postnom</th>
+                    <th>contact</th>
+                    <th>genre</th>
+                    <th>fonction</th>
+                    <th>Adresse</th>
+                    <th>mail</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($result as $row) { ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($row['id']); ?></td>
-                            <td><?php echo htmlspecialchars($row['nom']); ?></td>
-                            <td><?php echo htmlspecialchars($row['email']); ?></td>
+                    <td><?php echo htmlspecialchars($row['matricule']); ?></td>
+                    <td><?php echo htmlspecialchars($row['nom']); ?></td>
+                    <td><?php echo htmlspecialchars($row['postnom']); ?></td>
+                    <td><?php echo htmlspecialchars($row['contact']); ?></td>
+                    <td><?php echo htmlspecialchars($row['genre']); ?></td>
+                    <td><?php echo htmlspecialchars($row['fonction']); ?></td>
+                    <td><?php echo htmlspecialchars($row['adresse']); ?></td>
+                    <td><?php echo htmlspecialchars($row['mail']); ?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -146,19 +156,30 @@ $totalPages = ceil($totalRows / $limit);
         <table class="table table-bordered" id="tables">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>matricule</th>
                     <th>Nom</th>
-                    <th>Email</th>
-                    <th>Actions</th>
+                    <th>postnom</th>
+                    <th>contact</th>
+                    <th>genre</th>
+                    <th>fonction</th>
+                    <th>Adresse</th>
+                    <th>mail</th>
+                    <th>actions</th>
                 </tr>
             </thead>
             
             <tbody>
                 <?php foreach($result as $row) { ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($row['id']); ?></td>
+                    
+                    <td><?php echo htmlspecialchars($row['matricule']); ?></td>
                     <td><?php echo htmlspecialchars($row['nom']); ?></td>
-                    <td><?php echo htmlspecialchars($row['email']); ?></td>
+                    <td><?php echo htmlspecialchars($row['postnom']); ?></td>
+                    <td><?php echo htmlspecialchars($row['contact']); ?></td>
+                    <td><?php echo htmlspecialchars($row['genre']); ?></td>
+                    <td><?php echo htmlspecialchars($row['fonction']); ?></td>
+                    <td><?php echo htmlspecialchars($row['adresse']); ?></td>
+                    <td><?php echo htmlspecialchars($row['mail']); ?></td>
                     <td>
                         <button class="btn btn-info btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editMemberModal" data-id="<?php echo htmlspecialchars($row['id']); ?>" data-name="<?php echo htmlspecialchars($row['nom']); ?>" data-email="<?php echo htmlspecialchars($row['email']); ?>">Edit</button>
                         <a href="supprimer.php?sup=<?php echo htmlspecialchars($row['id']); ?>"><button class="btn btn-danger btn-sm">Delete</button></a>
@@ -195,13 +216,44 @@ $totalPages = ceil($totalRows / $limit);
                 </div>
                 <div class="modal-body">
                     <form action="adminpost.php" method="post">
+                    <div class="mb-3">
+                            <label for="membermatricule" class="form-label">matricule</label>
+                            <input name="matricule" type="text" class="form-control" id="membermatricule" placeholder="Matricule">
+                        </div>
                         <div class="mb-3">
                             <label for="memberName" class="form-label">Nom</label>
                             <input name="nom" type="text" class="form-control" id="memberName" placeholder="Nom">
                         </div>
                         <div class="mb-3">
+                            <label for="memberpostnom" class="form-label">postnom</label>
+                            <input name="postnom" type="text" class="form-control" id="memberpostnom" placeholder="Postnom">
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberfonction" class="form-label">fonction</label>
+                            <input name="fonction" type="text" class="form-control" id="memberfonction" placeholder="Fonction">
+                        </div> 	
+                        <div class="mb-3">
                             <label for="memberEmail" class="form-label">Email</label>
                             <input name="email" type="email" class="form-control" id="memberEmail" placeholder="Email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberadresse" class="form-label">adresse</label>
+                            <input name="adresse" type="text" class="form-control" id="memberadresse" placeholder="Adresse">
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberphotos" class="form-label">picture</label>
+                            <input name="photos" type="file" class="form-control" id="memberphotos" placeholder="Photo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberContact" class="form-label">Contact</label>
+                            <input name="contact" type="text" class="form-control" id="memberContact" placeholder="Contact">
+                        </div>
+                        <div class="mb-3">
+                            <label for="memberGenre" class="form-label">Genre</label>
+                            <select name="genre" class="form-control" id="memberGenre">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
                         </div>
                         <button type="submit" class="btn btn-primary" name="envoie">Ajouter</button>
                     </form>
