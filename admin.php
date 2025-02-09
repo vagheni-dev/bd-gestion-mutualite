@@ -123,6 +123,9 @@ $totalPages = ceil($totalRows / $limit);
                         <button type="button" class="btn btn-info mb-3">
                             <i class="fas fa-cogs"></i> Paramètres
                         </button>
+                        <a href="cotisations.php" class="btn btn-primary mb-3">
+                            <i class="fas fa-money-check-alt"></i> Cotisations
+                        </a>
                     </div>
         </div>
     </div>
