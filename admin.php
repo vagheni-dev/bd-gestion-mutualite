@@ -126,6 +126,18 @@ $totalPages = ceil($totalRows / $limit);
                         <a href="cotisations.php" class="btn btn-primary mb-3">
                             <i class="fas fa-money-check-alt"></i> Cotisations
                         </a>
+                        <a href="biens.php" class="btn btn-secondary mb-3">
+                            <i class="fas fa-building"></i> Biens
+                        </a>
+                        <a href="categories.php" class="btn btn-secondary mb-3">
+                            <i class="fas fa-list"></i> Catégories
+                        </a>
+                        <a href="enregistrer_bien.php" class="btn btn-secondary mb-3">
+                            <i class="fas fa-plus"></i> Enregistrer un Bien
+                        </a>
+                        <a href="demandes_location.php" class="btn btn-secondary mb-3">
+                            <i class="fas fa-file-alt"></i> Demandes de Location
+                        </a>
                     </div>
         </div>
     </div>

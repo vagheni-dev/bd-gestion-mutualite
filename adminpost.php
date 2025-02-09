@@ -2,6 +2,16 @@
 session_start();
 require_once("connexion/connexion.php");
 
+function generatePassword($length = 8) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomPassword = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomPassword .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomPassword;
+}
+
 if (isset($_POST['envoie'])) {
     $matricule = htmlspecialchars($_POST['matricule']);
     $nom = htmlspecialchars($_POST['nom']);
@@ -11,6 +21,11 @@ if (isset($_POST['envoie'])) {
     $adresse = htmlspecialchars($_POST['adresse']);
     $contact = htmlspecialchars($_POST['contact']);
     $genre = htmlspecialchars($_POST['genre']);
+
+    // Générer un mot de passe aléatoire
+    $password = generatePassword();
+    // Hacher le mot de passe
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // Vérification et enregistrement de l'image
     $target_dir = "image/";
@@ -50,9 +65,10 @@ if (isset($_POST['envoie'])) {
         }
     }
 
+
     if ($uploadOk == 1) {
         try {
-            $sql = "INSERT INTO `user` (`matricule`, `nom`, `postnom`, `fonction`, `mail`, `Adresse`, `contact`, `genre`, `photos`) VALUES (:matricule, :nom, :postnom, :fonction, :email, :adresse, :contact, :genre, :photos)";
+            $sql = "INSERT INTO `user` (`matricule`, `nom`, `postnom`, `fonction`, `mail`, `Adresse`, `contact`, `genre`, `photos`, `password`) VALUES (:matricule, :nom, :postnom, :fonction, :email, :adresse, :contact, :genre, :photos, :password)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':matricule', $matricule, PDO::PARAM_STR);
             $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
@@ -63,9 +79,22 @@ if (isset($_POST['envoie'])) {
             $stmt->bindParam(':photos', $photos, PDO::PARAM_STR);
             $stmt->bindParam(':contact', $contact, PDO::PARAM_STR);
             $stmt->bindParam(':genre', $genre, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
             $stmt->execute();
 
-            header("Location: admin.php");
+            echo "<script>
+                alert('Votre mot de passe est: $password');
+                function copyToClipboard(text) {
+                    var dummy = document.createElement('textarea');
+                    document.body.appendChild(dummy);
+                    dummy.value = text;
+                    dummy.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(dummy);
+                }
+                copyToClipboard('$password');
+                window.location.href = 'admin.php';
+            </script>";
             exit();
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
