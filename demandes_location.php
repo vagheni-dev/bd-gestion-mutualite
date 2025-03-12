@@ -7,28 +7,6 @@ if (!isset($pdo)) {
     die("Erreur de connexion à la base de données.");
 }
 
-// Gérer l'approbation ou le rejet des demandes de location
-if (isset($_POST['action'])) {
-    $demande_id = htmlspecialchars($_POST['demande_id']);
-    $action = htmlspecialchars($_POST['action']);
-
-    try {
-        if ($action == 'approuver') {
-            $sql = "UPDATE `demandes_location` SET `statut` = 'Approuvée' WHERE `id` = :demande_id";
-        } elseif ($action == 'rejeter') {
-            $sql = "UPDATE `demandes_location` SET `statut` = 'Rejetée' WHERE `id` = :demande_id";
-        }
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':demande_id', $demande_id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        header("Location: demandes_location.php");
-        exit();
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-        exit();
-    }
-}
 
 // Récupérer les demandes de location
 $stmt = $pdo->prepare("SELECT dl.*, b.nom AS bien_nom FROM `demandes_location` dl JOIN `biens` b ON dl.bien_id = b.id");
@@ -69,7 +47,6 @@ $demandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Main Content -->
             <div id="content">
 
-                <?php include("entete.php"); ?>
                 <?php
                 if (isset($_SESSION['username'])) {
                     echo "<div class='text-success'><center>Welcome, " . htmlspecialchars($_SESSION['username']) . "!</center></div>";
@@ -99,7 +76,6 @@ $demandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <th>Date de Début</th>
                                                 <th>Date de Fin</th>
                                                 <th>Statut</th>
-                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -111,18 +87,6 @@ $demandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <td><?php echo htmlspecialchars($demande['date_debut']); ?></td>
                                                 <td><?php echo htmlspecialchars($demande['date_fin']); ?></td>
                                                 <td><?php echo htmlspecialchars($demande['statut']); ?></td>
-                                                <td>
-                                                    <?php if ($demande['statut'] == 'En attente') { ?>
-                                                    <form action="demandes_location.php" method="post" style="display:inline;">
-                                                        <input type="hidden" name="demande_id" value="<?php echo htmlspecialchars($demande['id']); ?>">
-                                                        <button type="submit" name="action" value="approuver" class="btn btn-success btn-sm">Approuver</button>
-                                                    </form>
-                                                    <form action="demandes_location.php" method="post" style="display:inline;">
-                                                        <input type="hidden" name="demande_id" value="<?php echo htmlspecialchars($demande['id']); ?>">
-                                                        <button type="submit" name="action" value="rejeter" class="btn btn-danger btn-sm">Rejeter</button>
-                                                    </form>
-                                                    <?php } ?>
-                                                </td>
                                             </tr>
                                             <?php } ?>
                                         </tbody>
@@ -141,6 +105,9 @@ $demandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     </div>
     <!-- End of Page Wrapper -->
+    <?php 
+        require_once("footer.php");
+  ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="indexs.js"></script>

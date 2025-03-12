@@ -1,3 +1,8 @@
+<?php
+require_once('connexion/connexion.php');
+ $sql = "SELECT `message` FROM communique  WHERE matricule = (SELECT matricule FROM user WHERE fonction ='admin')";
+$result = $pdo->query($sql);
+?> 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,74 +12,105 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="./css/furaha.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <?php require_once('navigation.php');?>  
-    <!-- <header>
-        <div class="logo">Association</div>
-        <nav>
-            <ul>
-                <li><a href="#">Accueil</a></li>
-                <li><a href="#">À propos</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Contact</a></li>
-             <g transform="translate(12,12)"><path class="hlJH0" d="M-9 -5 L9 -5" fill="none" stroke-width="2"></path><path class="HBu6N" d="M-9 0 L9 0" fill="none" stroke-width="2"></path><path class="cLAGQe" d="M-9 5 L9 5" fill="none" stroke-width="2"></path></g> 
-            </ul>
-        </nav>
-    </header> --> 
+    <br>
+    <?php
+                    if (isset($_SESSION['matricule'])) {
+                        echo "<div class='text-success'><center>Bienvenue, " . htmlspecialchars($_SESSION['nom']).'  ' .htmlspecialchars($_SESSION['postnom']) . "!</center></div>";
+                    }
+                    if (isset($msg) && $msg != "") {
+                        echo "<div class='text-success'><center>" . htmlspecialchars($msg) . "</center></div>";
+                    }
+                    if (isset($errormsg) && $errormsg != "") {
+                        echo "<div class='text-danger'><center>" . htmlspecialchars($errormsg) . "</center></div>";
+                    }
+    ?>
+
+    <?php
+    $sql_carousel = "SELECT `image`, `description` FROM image ORDER BY id ASC LIMIT 3";
+    $result_carousel = $pdo->query($sql_carousel);
+    $active = true;
+    ?>
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="max-height: 500px; overflow: hidden;">
+        <div class="carousel-indicators">
+            <?php for ($i = 0; $i < $result_carousel->rowCount(); $i++): ?>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<?php echo $i; ?>" class="<?php echo $i === 0 ? 'active' : ''; ?>" aria-current="<?php echo $i === 0 ? 'true' : 'false'; ?>" aria-label="Slide <?php echo $i + 1; ?>"></button>
+            <?php endfor; ?>
+        </div>
+        <div class="carousel-inner">
+            <?php while ($row = $result_carousel->fetch(PDO::FETCH_ASSOC)): ?>
+                <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+                    <img src="admin/images/<?php echo htmlspecialchars($row['image']); ?>" class="d-block w-100" alt="..." style="max-height: 500px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5><?php echo htmlspecialchars($row['description']); ?></h5>
+                    </div>
+                </div>
+                <?php $active = false; ?>
+            <?php endwhile; ?>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+ 
     
     <div class="container">
         <h1>Gestion de l'Association</h1>
         
         <h2>Nos activités</h2>
         
+        <?php
+        $sql_activites = "SELECT `nom`, `description`, `image` FROM activite ORDER BY id DESC LIMIT 3";
+        $result_activites = $pdo->query($sql_activites);
+        ?>
         <div class="cards">
-            <div class="card">
-                <img src="./images/Digital.jpg" alt="Membre 1">
-                <div class="card-container">
-                    <h4>Action caritative</h4>
-                    <p>Lorem, ipsum dolor.</p>
-                    
-                </div>
-            </div>
-            <div class="card">
-                <img src="./images/association.jpg" alt="Membre 2">
-                <div class="card-container">
-                    <h4>Entraide Mutuelle</h4>
-                    <p>Lorem ipsum dolor sit amet.</p>
-                    
-                </div>
-            </div>
-            <div class="card">
-                <img src="./images/imgf.jpg" alt="Membre 3">
-                <div class="card-container">
-                    <h4>Emergence des membres</h4>
-                    <p>Lorem ipsum dolor sit amet.</p>
-                    
-                </div>
-            </div>
+            <?php
+            if ($result_activites->rowCount() > 0) {
+                while($row = $result_activites->fetch(PDO::FETCH_ASSOC)) {
+                    echo '<div class="card">';
+                    echo '<img src="admin/images/' . htmlspecialchars($row['image']) . '" alt="' . htmlspecialchars($row['nom']) . '">';
+                    echo '<div class="card-container">';
+                    echo '<h4>' . htmlspecialchars($row['nom']) . '</h4>';
+                    echo '<p>' . htmlspecialchars($row['description']) . '</p>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo '<p>Aucune activité trouvée</p>';
+            }
+            ?>
         </div>
     
         <h2>ANNONCES</h2>
-        <div class="grand">
-            <div class="TEXT">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                     Cum nisi fugiat sint error, voluptas fuga itaque perspiciatis 
-                     eaque dolorum. Natus repellendus illum eos corrupti. Saepe, 
-                     nulla. Deserunt quia porro odit.</p>
-            </div>
-            
-        </div>
-    </div>
+        <?php
+            if ($result->rowCount() > 0) {
+            while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                echo '<div class="grand">';
+                echo '<div class="TEXT">';
+                echo "<h3>Communiqué</h3>";
+                echo "<p>" . htmlspecialchars($row['message']) . "</p>";
+                echo '</div>';
+                echo '</div>';
+            }
+            } else {
+            echo "<h3>Communiqué</h3>";
+            echo "<p>Aucun communiqué trouvé</p>";
+            }
+        ?>
 
-    <footer>
-        <p>Suivez-nous sur les réseaux sociaux</p>
-        <div class="social-icons">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-        </div>
-    </footer>
+        <?php 
+        require_once("footer.php");
+         ?>
 </body>
 </html>

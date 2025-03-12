@@ -1,3 +1,10 @@
+
+<?php
+session_start();
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -21,10 +28,25 @@
             <ul class="navlink">
               
             <li><a href="index.php"><i class="fa-solid fa-house"></i>Acceuil</a></li>
-            <li><a href="admin.php"><i class="fa-solid fa-paper-plane"></i>gestion</a></li>
-            <li><a href="chat.html"><i class="fa-solid fa-plane"></i> Activite </a></li>
-            <li><a href="about.html"><i class="fa-solid fa-globe"></i>Apropos</a></li>
-            <li><a href=""><i class="fa-solid fa-wifi"></i><button class="conn">se déconnecté</button></a></li>
+            <li><a href="biens.php"><i class="fa-solid fa-paper-plane"></i>bien</a></li>
+            <li><a href="demandes_location.php"><i class="fa-solid fa-plane"></i> demeder location </a></li>
+            <li><a href="fiche.php"><i class="fa-solid fa-globe"></i>voir fiche</a></li>
+            <ul class="navbar-nav ms-auto align-items-center">
+                <?php if (isset($_SESSION['matricule'])) {   
+                    echo '<li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="admin/images/' . $_SESSION['image'] . '" alt="Profile Image" class="rounded-circle" width="30" height="30">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="admin/images/' . $_SESSION['image'] . '">Profile</a>
+                                <a class="dropdown-item" href="logout.php">Logout</a>
+                            </div>
+                          </li>';
+                } else {
+                    echo '<li><a href="login.php"><i class="fa-solid fa-wifi"></i>se connecter</a></li>';
+                } ?>
+            </ul>
+            
             </ul>
 <button class="menu-toggol"><i class="fa-solid fa-bars"></i></button>
 </div>

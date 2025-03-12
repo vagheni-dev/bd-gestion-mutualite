@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once("connexion/connexion.php");
 
 // Vérifier si $pdo est défini
@@ -12,22 +11,24 @@ $stmt = $pdo->prepare("SELECT * FROM `biens`");
 $stmt->execute();
 $biens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Gérer les demandes de location
+// Gérer l'enregistrement des annonces
 if (isset($_POST['demande_location'])) {
     $bien_id = htmlspecialchars($_POST['bien_id']);
     $nom_demandeur = htmlspecialchars($_POST['nom_demandeur']);
     $email_demandeur = htmlspecialchars($_POST['email_demandeur']);
     $date_debut = htmlspecialchars($_POST['date_debut']);
     $date_fin = htmlspecialchars($_POST['date_fin']);
+    $quantite = htmlspecialchars($_POST['quantite']);
 
     try {
-        $sql = "INSERT INTO `demandes_location` (`bien_id`, `nom_demandeur`, `email_demandeur`, `date_debut`, `date_fin`) VALUES (:bien_id, :nom_demandeur, :email_demandeur, :date_debut, :date_fin)";
+        $sql = "INSERT INTO `annonces` (`bien_id`, `nom_demandeur`, `email_demandeur`, `date_debut`, `date_fin`, `quantite`) VALUES (:bien_id, :nom_demandeur, :email_demandeur, :date_debut, :date_fin, :quantite)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':bien_id', $bien_id, PDO::PARAM_INT);
         $stmt->bindParam(':nom_demandeur', $nom_demandeur, PDO::PARAM_STR);
         $stmt->bindParam(':email_demandeur', $email_demandeur, PDO::PARAM_STR);
         $stmt->bindParam(':date_debut', $date_debut, PDO::PARAM_STR);
         $stmt->bindParam(':date_fin', $date_fin, PDO::PARAM_STR);
+        $stmt->bindParam(':quantite', $quantite, PDO::PARAM_INT);
         $stmt->execute();
 
         header("Location: biens.php");
@@ -72,10 +73,9 @@ if (isset($_POST['demande_location'])) {
             <!-- Main Content -->
             <div id="content">
 
-                <?php include("entete.php"); ?>
                 <?php
-                if (isset($_SESSION['username'])) {
-                    echo "<div class='text-success'><center>Welcome, " . htmlspecialchars($_SESSION['username']) . "!</center></div>";
+                if (isset($_SESSION['matricule'])) {
+                    echo "<div class='text-success'><center>Welcome, " . htmlspecialchars($_SESSION['nom']) . "!</center></div>";
                 }
                 if (isset($msg) && $msg != "") {
                     echo "<div class='text-success'><center>" . htmlspecialchars($msg) . "</center></div>";
@@ -100,6 +100,7 @@ if (isset($_POST['demande_location'])) {
                                                 <th>Description</th>
                                                 <th>Adresse</th>
                                                 <th>Prix de Location</th>
+                                                <th>images</th>
                                                 <th>Disponibilité</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -111,6 +112,7 @@ if (isset($_POST['demande_location'])) {
                                                 <td><?php echo htmlspecialchars($bien['description']); ?></td>
                                                 <td><?php echo htmlspecialchars($bien['adresse']); ?></td>
                                                 <td><?php echo htmlspecialchars($bien['prix_location']); ?></td>
+                                                <td><img src="<?php echo "admin/images/". htmlspecialchars($bien['image']); ?>" alt="Image de <?php echo htmlspecialchars($bien['nom']); ?>" style="width: 100px; height: auto;"></td>
                                                 <td><?php echo $bien['disponible'] ? 'Disponible' : 'Indisponible'; ?></td>
                                                 <td>
                                                     <?php if ($bien['disponible']) { ?>
@@ -147,23 +149,29 @@ if (isset($_POST['demande_location'])) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="biens.php" method="post">
-                        <input type="hidden" name="bien_id" id="bien_id">
+                    <form action="demande_location.php" method="post">
+                        <div class="mb-3">
+                            <input type="hidden" name="bien_id" id="bien_id">
+                        </div>
                         <div class="mb-3">
                             <label for="nom_demandeur" class="form-label">Nom</label>
-                            <input name="nom_demandeur" type="text" class="form-control" id="nom_demandeur" placeholder="Nom">
+                            <input name="nom_demandeur" type="text" class="form-control" id="nom_demandeur" placeholder="Nom" required>
                         </div>
                         <div class="mb-3">
                             <label for="email_demandeur" class="form-label">Email</label>
-                            <input name="email_demandeur" type="email" class="form-control" id="email_demandeur" placeholder="Email">
+                            <input name="email_demandeur" type="email" class="form-control" id="email_demandeur" placeholder="Email" required>
                         </div>
                         <div class="mb-3">
                             <label for="date_debut" class="form-label">Date de Début</label>
-                            <input name="date_debut" type="date" class="form-control" id="date_debut">
+                            <input name="date_debut" type="date" class="form-control" id="date_debut" required>
                         </div>
                         <div class="mb-3">
                             <label for="date_fin" class="form-label">Date de Fin</label>
-                            <input name="date_fin" type="date" class="form-control" id="date_fin">
+                            <input name="date_fin" type="date" class="form-control" id="date_fin" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="quantite" class="form-label">Quantité</label>
+                            <input name="quantite" type="number" class="form-control" id="quantite" required>
                         </div>
                         <button type="submit" class="btn btn-primary" name="demande_location">Envoyer la Demande</button>
                     </form>
@@ -177,7 +185,7 @@ if (isset($_POST['demande_location'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const demandeButtons = document.querySelectorAll('.btn-primary');
+            const demandeButtons = document.querySelectorAll('.btn-primary[data-bs-toggle="modal"]');
             demandeButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const bienId = button.getAttribute('data-id');
